@@ -13,28 +13,65 @@
         mc:Ignorable="d">
     <Window.Resources>
         <local:Covertidor x:Key="conversor" />
-        <local:ConvertidorImagen x:Key="convertidorIMG" />
-        <!-- Imagenes de flecha -->
-        <Style TargetType="{x:Type Image}"
-               x:Key="imagenesNavegacion">
+        <!--  Imagenes de flecha  -->
+        <Style x:Key="imagenesNavegacion"
+               TargetType="{x:Type Image}">
             <Setter Property="MinWidth"
                     Value="23" />
             <Setter Property="Height"
                     Value="23" />
         </Style>
-        <!-- Imagenes de tipo de héroe -->
-        <Style TargetType="{x:Type Image}"
-               x:Key="imagenesHeroe">
-            <Setter Property="Width"
-                    Value="50" />
-            <Setter Property="Height"
-                    Value="50" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Right" />
+        <!-- Tamaño fuente del nombre del superheroe-->
+        <Style TargetType="TextBlock" x:Key="nombreHeroe">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="FontSize"
+                                           To="50"
+                                           Duration="0:0:1"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="FontSize"
+                                             To="40"
+                                             Duration="0:0:1"></DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <!-- Iconos del tipo de Heroe -->
+        <Style x:Key="imagenesVengador"
+               TargetType="{x:Type Image}">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Vengador}"
+                             Value="True">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="imagenesXMEN"
+               TargetType="{x:Type Image}">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Xmen}"
+                             Value="True">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <!--  Imagen Info  -->
-        <Style TargetType="{x:Type Image}"
-               x:Key="imagenInfo">
+        <Style x:Key="imagenInfo"
+               TargetType="{x:Type Image}">
             <Setter Property="Width"
                     Value="20" />
             <Setter Property="Height"
@@ -43,14 +80,14 @@
                     Value="Imagenes/info.png" />
         </Style>
         <!--  StackPanel Formulario  -->
-        <Style TargetType="{x:Type StackPanel}"
-               x:Key="stackPanelFormulario">
+        <Style x:Key="stackPanelFormulario"
+               TargetType="{x:Type StackPanel}">
             <Setter Property="Margin"
                     Value="0,10,0,0" />
         </Style>
         <!--  Borde  -->
-        <Style TargetType="{x:Type Border}"
-               x:Key="borde">
+        <Style x:Key="borde"
+               TargetType="{x:Type Border}">
             <Setter Property="BorderBrush"
                     Value="Black" />
             <Setter Property="BorderThickness"
@@ -64,27 +101,49 @@
             </Setter>
         </Style>
         <!--  Botones  -->
-        <Style TargetType="{x:Type Button}"
-               x:Key="botonesFormulario">
+        <Style x:Key="botonesFormulario"
+               TargetType="{x:Type Button}">
             <Setter Property="Padding"
                     Value="0,5,0,5" />
             <Setter Property="MinWidth"
                     Value="100" />
             <Setter Property="Margin"
                     Value="5,0,0,0" />
+            <Setter Property="FontWeight"
+                    Value="Normal" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="FontWeight"
+                            Value="Bold" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <!--  TextBox  -->
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Padding"
                     Value="0,2,0,2" />
         </Style>
-        <!-- CheckBox -->
+        <Style x:Key="textBoxInput"
+               TargetType="TextBox">
+            <Setter Property="Background"
+                    Value="White" />
+            <Style.Triggers>
+                <Trigger Property="Text"
+                         Value="">
+                    <Setter Property="Background"
+                            Value="IndianRed" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <!--  CheckBox  -->
         <Style TargetType="{x:Type CheckBox}">
             <Setter Property="IsEnabled"
                     Value="{Binding ElementName=heroeRadioButton, Path=IsChecked, Converter={StaticResource conversor}}" />
         </Style>
-        <Style TargetType="DockPanel"
-               x:Key="principal">
+        <!-- Background del panel donde está la foto del heroe/villano-->
+        <Style x:Key="principal"
+               TargetType="DockPanel">
             <Setter Property="Background"
                     Value="IndianRed" />
             <Style.Triggers>
@@ -104,45 +163,50 @@
                     <DockPanel DockPanel.Dock="Top"
                                LastChildFill="False">
                         <TextBlock x:Name="nombreHeroeTextBlock"
+                                   Margin="10,10,0,10"
+                                   FontFamily="Impact"
                                    FontSize="40"
                                    Foreground="White"
-                                   Text="{Binding Path=Nombre}"
-                                   FontFamily="Impact"
-                                   Margin="10,10,0,10">
+                                   Style="{StaticResource nombreHeroe}"
+                                   Text="{Binding Path=Nombre}">
                             <TextBlock.Effect>
                                 <DropShadowEffect />
                             </TextBlock.Effect></TextBlock>
                         <StackPanel DockPanel.Dock="Right"
                                     Orientation="Horizontal">
                             <Image x:Name="vengadorImage"
+                                   Margin="0,0,10,0"
                                    Source="Imagenes/avengers.png"
-                                   Visibility="{Binding Path=Vengador,Converter={StaticResource convertidorIMG}}"
-                                   Style="{StaticResource imagenesHeroe}"
-                                   Margin="0,0,10,0" />
+                                   Height="50"
+                                   HorizontalAlignment="Right"
+                                   Width="50"
+                                   Style="{StaticResource imagenesVengador}" />
                             <Image x:Name="xmenImage"
                                    Source="Imagenes/xmen.png"
-                                   Visibility="{Binding Path=Xmen,Converter={StaticResource convertidorIMG}}"
-                                   Style="{StaticResource imagenesHeroe}" />
+                                   Height="50"
+                                   HorizontalAlignment="Right"
+                                   Width="50"
+                                   Style="{StaticResource imagenesXMEN}" />
                         </StackPanel>
                     </DockPanel>
-                    <StackPanel HorizontalAlignment="Center"
+                    <StackPanel Margin="0,20,0,10"
+                                HorizontalAlignment="Center"
                                 DockPanel.Dock="Bottom"
-                                Orientation="Horizontal"
-                                Margin="0,20,0,10">
+                                Orientation="Horizontal">
                         <Image x:Name="flechaAtrasImage"
-                               Style="{StaticResource imagenesNavegacion}"
+                               MouseUp="FlechaAtrasImage_MouseUp"
                                Source="Imagenes/arrow.png"
-                               MouseUp="FlechaAtrasImage_MouseUp" />
+                               Style="{StaticResource imagenesNavegacion}" />
                         <TextBlock x:Name="numeroImagenTextBlock"
-                                   Text="0/0"
                                    Margin="5,0,5,0"
+                                   FontSize="20"
                                    FontWeight="Bold"
-                                   FontSize="20" />
+                                   Text="0/0" />
                         <Image x:Name="flechaAdelanteImage"
-                               Style="{StaticResource imagenesNavegacion}"
+                               MouseUp="FlechaAdelanteImage_MouseUp"
                                RenderTransformOrigin="0.5,0.5"
                                Source="Imagenes/arrow.png"
-                               MouseUp="FlechaAdelanteImage_MouseUp">
+                               Style="{StaticResource imagenesNavegacion}">
                             <Image.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform ScaleX="-1"
@@ -155,10 +219,10 @@
                             </Image.RenderTransform>
                         </Image>
                     </StackPanel>
-                    <Image  Stretch="UniformToFill"
-                            x:Name="imagenHeroeVillanoImage"
-                            Source="{Binding Path=Imagen}"
-                            Margin="10,0,10,0" />
+                    <Image x:Name="imagenHeroeVillanoImage"
+                           Margin="10,0,10,0"
+                           Source="{Binding Path=Imagen}"
+                           Stretch="UniformToFill" />
                 </DockPanel>
             </TabItem>
             <TabItem Header="Nuevo superhéroe">
@@ -175,6 +239,7 @@
                             <Image Style="{StaticResource imagenInfo}" />
                         </StackPanel>
                         <TextBox x:Name="nombreSuperheroeTexBox"
+                                 Style="{StaticResource textBoxInput}"
                                  Text="{Binding Path=Nombre}" />
                         <StackPanel Orientation="Horizontal"
                                     Style="{StaticResource stackPanelFormulario}">
@@ -182,6 +247,7 @@
                             <Image Style="{StaticResource imagenInfo}" />
                         </StackPanel>
                         <TextBox x:Name="imagenSuperheroeTexBox"
+                                 Style="{StaticResource textBoxInput}"
                                  Text="{Binding Path=Imagen}" />
                         <Grid Margin="0,20,0,0">
                             <Grid.ColumnDefinitions>
@@ -192,44 +258,44 @@
                                     Margin="0,0,8,0"
                                     Style="{StaticResource borde}">
                                 <StackPanel>
-                                    <RadioButton IsChecked="{Binding Path=Heroe}"
-                                                 x:Name="heroeRadioButton"
+                                    <RadioButton x:Name="heroeRadioButton"
                                                  Margin="8,4,0,2"
                                                  Content="Héroe"
-                                                 GroupName="grupoTipo" />
-                                    <RadioButton IsChecked="{Binding Path=Villano}"
-                                                 x:Name="villanoRadioButton"
+                                                 GroupName="grupoTipo"
+                                                 IsChecked="{Binding Path=Heroe}" />
+                                    <RadioButton x:Name="villanoRadioButton"
                                                  Margin="8,2,0,4"
                                                  Content="Villano"
-                                                 GroupName="grupoTipo" />
+                                                 GroupName="grupoTipo"
+                                                 IsChecked="{Binding Path=Villano}" />
                                 </StackPanel>
                             </Border>
                             <Border Grid.Column="1"
                                     Margin="8,0,0,0"
                                     Style="{StaticResource borde}">
                                 <StackPanel>
-                                    <CheckBox IsChecked="{Binding Path=Vengador}"
-                                              x:Name="vengadoresCheckBox"
+                                    <CheckBox x:Name="vengadoresCheckBox"
                                               Margin="8,4,0,2"
-                                              Content="Vengadores" />
-                                    <CheckBox IsChecked="{Binding Path=Xmen}"
-                                              x:Name="xmeCheckBox"
+                                              Content="Vengadores"
+                                              IsChecked="{Binding Path=Vengador}" />
+                                    <CheckBox x:Name="xmeCheckBox"
                                               Margin="8,2,0,4"
-                                              Content="X-Men" />
+                                              Content="X-Men"
+                                              IsChecked="{Binding Path=Xmen}" />
                                 </StackPanel>
                             </Border>
                         </Grid>
                         <StackPanel Margin="0,30,0,0"
                                     HorizontalAlignment="Center"
                                     Orientation="Horizontal">
-                            <Button Content="Aceptar"
+                            <Button Click="AceptarButton"
+                                    Content="Aceptar"
                                     IsDefault="True"
-                                    Style="{StaticResource botonesFormulario}"
-                                    Click="AceptarButton" />
-                            <Button Content="Limpiar"
-                                    Style="{StaticResource botonesFormulario}"
+                                    Style="{StaticResource botonesFormulario}" />
+                            <Button Click="LimpiarButton"
+                                    Content="Limpiar"
                                     IsCancel="true"
-                                    Click="LimpiarButton" />
+                                    Style="{StaticResource botonesFormulario}" />
                         </StackPanel>
                     </StackPanel>
                     <Border Grid.Column="1"
